@@ -1,0 +1,45 @@
+#nop 样板模块;
+
+/* ask ping about 工作;你向平一指打听有关『工作』的消息。;平一指说道：「我们现在正好缺少一种药，这是药方，你去配吧」;north;peiyao;不知过了多久，你终于把药配完。;south;give ping yao; */
+
+#var AutoPeiYao[META] {
+    {NAME}      {自动配药}
+    {DESC}      {尝试在扬州进行自动配药}
+    {AUTHOR}    {F10atingHeart}
+    {CONFIG}    {
+        {times} {执行次数}
+    }
+}
+
+#nop 自动配药的初始化函数
+#func {AutoPeiYao.Init} {
+    #var AutoPeiYao[config];
+    okLog AutoPeiYao初始化中…;
+
+    #return true
+}
+
+#alias {AutoPeiYao.Run} {
+    #var cnt 0;
+    @AutoPeiYao.StartWork{};
+}
+
+#alias {AutoPeiYao.StartWork} {
+    #action {平一指笑呵呵接过你配好的药，说：谢谢这位小兄弟} {ask ping about 工作;};
+    #action {你向平一指打听有关『工作』的消息。} {north;peiyao;};
+    #action {不知过了多久，你终于把药配完。} {
+        south;
+        give ping yao;
+    };
+    #SHOWME {平一指笑呵呵接过你配好的药，说：谢谢这位小兄弟};
+}
+
+#ALIAS {AutoPeiYao.StopWork} {
+    #UNACTION {平一指笑呵呵接过你配好的药，说：谢谢这位小兄弟};
+    #UNACTION {你向平一指打听有关『工作』的消息。};
+    #UNACTION {不知过了多久，你终于把药配完。};
+};
+
+#function {AutoPeiYao.CheckCount} {
+    #IF {$cnt > $AutoPeiYao[config][times]} {$cnt = 0;@AutoPeiYao.Stop{}};
+}

@@ -1,0 +1,28 @@
+#nop 在这个文件里面定义了一些常用的alias
+#ALIAS GOTOREST {
+    s;w;w;n;n;n;w;n;
+    #delay 2 sleep;
+    #ACTION {^你一觉醒来，精神抖擞地活动了几下手脚。} {
+        GOTODAZUO;
+    };
+    #ACTION {^你刚刚睡过一觉, 多睡对身体有害无益!} {
+        #delay 2 sleep;
+    };
+};
+
+#ALIAS GOTOXUE {
+    s;s;e;s;s;s;e;e;n;
+    #delay 1.5 {xue wen for strike 20;};
+    #ACTION {^你向闻万夫请教} {
+        #DELAY 1.5 {
+            GOTOREST;
+        }
+    };
+};
+
+#ALIAS GOTODAZUO {
+    n;dazuo 100;
+    #ACTION {^你运功完毕，深深吸了口气，站了起来。} {
+        GOTOXUE;
+    };
+};

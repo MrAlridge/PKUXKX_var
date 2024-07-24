@@ -1,0 +1,74 @@
+#VARIABLE AutoBangMang[META] {
+    {NAME}      {自动完成帮忙任务}
+    {DESC}      {尝试完成李万山的各种任务}
+    {AUTHOR}    {F10atingHeart}
+};
+
+#FUNCTION {AutoBangMang.Init} {
+    #VARIABLE AutoBangMang[config];
+    okLog 自动帮忙初始化中;
+
+    #RETURN true;
+};
+
+#ALIAS {AutoBangMang.Start} {
+    ask li wanshan about 帮忙;
+    #ACTION {^你向李万山打听有关『帮忙』的消息。} {
+        #line oneshot #action {^李万山想了想，对你道：「你就在饭堂帮忙整理桌椅(zhengli 桌椅)罢，整理完了找我覆命。」} {
+            @AutoBangMang.ZhengLi{};    
+        };
+        #line oneshot #action {^李万山想了想，对你道：「你拿着这柄柴刀，去伙房帮忙劈柴(pi 柴)罢。} {
+            @AutoBangMang.PiChai{};
+        };
+        #line oneshot #action {^李万山想了想，对你道：「你就在饭堂帮忙收拾碗筷(shoushi 碗筷)罢，收拾完了送到伙房去。」} {
+            @AutoBangMang.ShouShi{};
+        };
+        #line oneshot #action {^李万山想了想，对你道：「你去伙房帮忙烧火(shao 火)罢。」} {
+            @AutoBangMang.ShaoHuo{};
+        };
+    };
+    #ACTION {^李万山满意的拍了拍你的肩，道：「干得好！」} {
+        #delay 1.2 {ask li wanshan about 帮忙;}
+    };
+};
+
+#ALIAS {AutoBangMang.Stop} {
+    #UNACTION {^你向李万山打听有关『帮忙』的消息。};
+    #UNACTION {^李万山满意的拍了拍你的肩，道：「干得好！」};
+    #UNACTION {^你将碗筷放下，擦了擦汗。};
+    #UNACTION {^你整理着饭堂中的桌椅。};
+    #UNACTION {^你摆正一块木头，一刀劈了下去，「哐」的一声，木头被劈为两片。};
+    #UNACTION {^你的任务完成了，快回去覆命罢。};
+};
+
+#FUNCTION {AutoBangMang.ShouShi} {
+    shoushi 碗筷;
+    #action {^你将碗筷放下，擦了擦汗。} {busy.Wait {s;shoushi 碗筷}};
+    #action {^你的任务完成了，快回去覆命罢。} {busy.Wait {ask li wanshan about 完成}}
+};
+
+#FUNCTION {AutoBangMang.ZhengLi} {
+    zhengli 桌椅;
+    #action {^你整理着饭堂中的桌椅。} {busy.Wait {zhengli 桌椅}};
+    #action {^你的任务完成了，快回去覆命罢。} {busy.Wait {ask li wanshan about 完成}};
+};
+
+#FUNCTION {AutoBangMang.PiChai} {
+    unwield all;
+    wield chai dao;
+    n;
+    pi 柴;
+    #ACTION {^你摆正一块木头，一刀劈了下去，「哐」的一声，木头被劈为两片。} { #delay 1.2 {pi 柴} };
+    #ACTION {^你的任务完成了，快回去覆命罢。} { busy.Wait {s;give chai dao to li wanshan;ask li wanshan about 完成} };
+};
+
+#FUNCTION {AutoBangMang.ShaoHuo} {
+    n;
+    shao 火;
+    #ACTION {^你凑在灶前，舔柴、鼓风，努力让火烧得更旺。} {
+        busy.Wait {shao 火;};
+    };
+    #ACTION {^你的任务完成了，快回去覆命罢。} {
+        busy.Wait {s;ask li wanshan about 完成;};
+    };
+};

@@ -1,0 +1,50 @@
+#NOP {自动打坐加学内功};
+
+#VARIABLE AutoDaZuoAndXue[META] {
+    {NAME}      {自动打坐加学习内功}
+    {AUTHOR}    {F10atingHeart}
+};
+
+#FUNCTION {AutoDaZuoAndXue.Init} {
+    #VARIABLE AutoDaZuoAndXue[config];
+    #RETURN true;
+};
+
+#ALIAS {AutoDaZuoAndXue.Start} {
+    #nop 先跑去上面打坐
+    @AutoDaZuoAndXue.DaZuo{};
+};
+
+#nop 打坐
+#function {AutoDaZuoAndXue.DaZuo} {
+    n;dazuo 100;
+    #nop 打坐结束就跑去学内功;
+    #ACTION {^你运功完毕，深深吸了口气，站了起来。} {
+        @AutoDaZuoAndXue.NeiGong{};
+    };
+};
+
+#function {AutoDaZuoAndXue.NeiGong} {
+    #delay 0.5 s;
+    #delay 0.5 s;
+    #delay 0.5 e;
+    #delay 0.5 s;
+    #delay 0.5 s;
+    #delay 0.5 s;
+    #delay 0.5 e;
+    #delay 0.5 e;
+    #delay 0.5 n;
+    #delay 0.5 {xue wen for force 20;};
+    #nop 消耗完就去睡觉;
+    #ACTION {^你今天太累了，结果什么也没有学到。} {
+        @AutoDaZuoAndXue.ShuiJiao{};
+    };
+};
+
+#function {AutoDaZuoAndXue.ShuiJiao} {
+    s;w;w;n;n;n;w;n;
+    #delay 1 {sleep;};
+    #ACTION {^你一觉醒来，精神抖擞地活动了几下手脚。} {
+        @AutoDaZuoAndXue.DaZuo{};
+    };
+};
